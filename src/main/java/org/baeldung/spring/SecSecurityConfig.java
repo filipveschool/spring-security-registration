@@ -2,8 +2,6 @@ package org.baeldung.spring;
 
 import org.baeldung.persistence.dao.UserRepository;
 import org.baeldung.security.CustomRememberMeServices;
-import org.baeldung.security.google2fa.CustomAuthenticationProvider;
-import org.baeldung.security.google2fa.CustomWebAuthenticationDetailsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -44,9 +42,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationFailureHandler authenticationFailureHandler;
 
     @Autowired
-    private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
-
-    @Autowired
     private UserRepository userRepository;
 
     public SecSecurityConfig() {
@@ -55,7 +50,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider());
     }
 
     @Override
@@ -83,7 +77,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login?error=true")
                 .successHandler(myAuthenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
-                .authenticationDetailsSource(authenticationDetailsSource)
+                //.authenticationDetailsSource(authenticationDetailsSource)
             .permitAll()
                 .and()
             .sessionManagement()
@@ -103,14 +97,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // beans
-
-    @Bean
-    public DaoAuthenticationProvider authProvider() {
-        final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(encoder());
-        return authProvider;
-    }
 
     @Bean
     public PasswordEncoder encoder() {

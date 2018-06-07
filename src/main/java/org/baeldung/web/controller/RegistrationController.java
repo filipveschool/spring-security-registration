@@ -64,9 +64,6 @@ public class RegistrationController {
     @Autowired
     private Environment env;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     public RegistrationController() {
         super();
     }
@@ -89,10 +86,7 @@ public class RegistrationController {
         final String result = userService.validateVerificationToken(token);
         if (result.equals("valid")) {
             final User user = userService.getUser(token);
-            // if (user.isUsing2FA()) {
-            // model.addAttribute("qr", userService.generateQRUrl(user));
-            // return "redirect:/qrcode.html?lang=" + locale.getLanguage();
-            // }
+
             authWithoutPassword(user);
             model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
             return "redirect:/console.html?lang=" + locale.getLanguage();
@@ -158,15 +152,6 @@ public class RegistrationController {
         return new GenericResponse(messages.getMessage("message.updatePasswordSuc", null, locale));
     }
 
-    @RequestMapping(value = "/user/update/2fa", method = RequestMethod.POST)
-    @ResponseBody
-    public GenericResponse modifyUser2FA(@RequestParam("use2FA") final boolean use2FA) throws UnsupportedEncodingException {
-        final User user = userService.updateUser2FA(use2FA);
-        if (use2FA) {
-            return new GenericResponse(userService.generateQRUrl(user));
-        }
-        return null;
-    }
 
     // ============== NON-API ============
 
@@ -201,14 +186,6 @@ public class RegistrationController {
         } catch (ServletException e) {
             LOGGER.error("Error while login ", e);
         }
-    }
-
-    public void authWithAuthManager(HttpServletRequest request, String username, String password) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-        authToken.setDetails(new WebAuthenticationDetails(request));
-        Authentication authentication = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        // request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
     }
 
     public void authWithoutPassword(User user) {

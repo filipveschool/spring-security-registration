@@ -1,5 +1,7 @@
 package org.baeldung.persistence.model;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -13,41 +15,46 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.jboss.aerogear.security.otp.api.Base32;
-
 @Entity
-@Table(name = "user_account")
+// @Table(name = "user_account")
+@Table(name = "user")
 public class User {
 
     @Id
-    @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(unique = true, nullable = false, name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "first_name")
     private String firstName;
 
+    @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "email")
     private String email;
 
-    @Column(length = 60)
+    @Column(length = 60, name = "password")
     private String password;
 
+    @Column(name = "enabled")
     private boolean enabled;
-
-    private boolean isUsing2FA;
-
-    private String secret;
 
     //
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id",
+                    referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id",
+                    referencedColumnName = "id")
+    )
     private Collection<Role> roles;
 
     public User() {
         super();
-        this.secret = Base32.random();
         this.enabled = false;
     }
 
@@ -107,21 +114,6 @@ public class User {
         this.enabled = enabled;
     }
 
-    public boolean isUsing2FA() {
-        return isUsing2FA;
-    }
-
-    public void setUsing2FA(boolean isUsing2FA) {
-        this.isUsing2FA = isUsing2FA;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
 
     @Override
     public int hashCode() {
@@ -152,8 +144,8 @@ public class User {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("User [id=").append(id).append(", firstName=").append(firstName).append(", lastName=").append(lastName).append(", email=").append(email).append(", password=").append(password).append(", enabled=").append(enabled).append(", isUsing2FA=")
-                .append(isUsing2FA).append(", secret=").append(secret).append(", roles=").append(roles).append("]");
+        builder.append("User [id=").append(id).append(", firstName=").append(firstName).append(", lastName=").append(lastName).append(", email=").append(email).append(", password=").append(password).append(", enabled=").append(enabled)
+                .append(", roles=").append(roles).append("]");
         return builder.toString();
     }
 

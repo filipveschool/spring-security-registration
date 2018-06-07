@@ -41,10 +41,6 @@ public interface IUserService {
 
     String validateVerificationToken(String token);
 
-    String generateQRUrl(User user) throws UnsupportedEncodingException;
-
-    User updateUser2FA(boolean use2FA);
-
     List<String> getUsersFromSessionRegistry();
 
 }

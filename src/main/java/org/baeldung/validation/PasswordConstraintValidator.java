@@ -5,16 +5,13 @@ import java.util.Arrays;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.passay.AlphabeticalSequenceRule;
-import org.passay.DigitCharacterRule;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
 import org.passay.LengthRule;
-import org.passay.NumericalSequenceRule;
 import org.passay.PasswordData;
 import org.passay.PasswordValidator;
-import org.passay.QwertySequenceRule;
 import org.passay.RuleResult;
-import org.passay.SpecialCharacterRule;
-import org.passay.UppercaseCharacterRule;
+
 import org.passay.WhitespaceRule;
 
 import com.google.common.base.Joiner;
@@ -30,14 +27,23 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
     public boolean isValid(final String password, final ConstraintValidatorContext context) {
         // @formatter:off
         final PasswordValidator validator = new PasswordValidator(Arrays.asList(
-            new LengthRule(8, 30), 
-            new UppercaseCharacterRule(1), 
-            new DigitCharacterRule(1), 
-            new SpecialCharacterRule(1), 
-            new NumericalSequenceRule(3,false),
-            new AlphabeticalSequenceRule(3,false),
-            new QwertySequenceRule(3,false),
-            new WhitespaceRule()));
+                // at least 8 characters
+                new LengthRule(8, 30),
+
+                // at least one upper-case character
+                new CharacterRule(EnglishCharacterData.UpperCase, 1),
+
+                // at least one lower-case character
+                new CharacterRule(EnglishCharacterData.LowerCase, 1),
+
+                // at least one digit character
+                new CharacterRule(EnglishCharacterData.Digit, 1),
+
+                // at least one symbol (special character)
+                new CharacterRule(EnglishCharacterData.Special, 1),
+
+                // no whitespace
+                new WhitespaceRule()));
         final RuleResult result = validator.validate(new PasswordData(password));
         if (result.isValid()) {
             return true;
