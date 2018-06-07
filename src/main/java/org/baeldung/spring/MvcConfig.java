@@ -43,7 +43,6 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/loginRememberMe");
         registry.addViewController("/customLogin");
         registry.addViewController("/registration.html");
-        registry.addViewController("/registrationCaptcha.html");
         registry.addViewController("/logout.html");
         registry.addViewController("/homepage.html");
         registry.addViewController("/expiredAccount.html");
@@ -58,7 +57,6 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/updatePassword.html");
         registry.addViewController("/changePassword.html");
         registry.addViewController("/users.html");
-        registry.addViewController("/qrcode.html");
     }
 
     @Override

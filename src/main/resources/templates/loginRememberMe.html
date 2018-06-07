@@ -1,6 +1,7 @@
-<html>
+<!DOCTYPE html>
 
-<head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"><head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
 <title th:text="#{label.pages.home.title}">Title</title>
 <script th:inline="javascript">
@@ -67,8 +68,6 @@ label{padding-left:0 !important}
             <br/> Current Locale :  <span th:text="${#locale}"></span><br/><br/> 
              <a class="btn btn-default" th:href="@{/registration.html}" th:text="#{label.form.loginSignUp}">signup</a>
              <br/>
-             <a class="btn btn-default" th:href="@{/registrationCaptcha.html}" th:text="#{label.form.loginSignUpCaptcha}">captcha signup</a>
-             <br/><br/>
             <a class="btn btn-default" th:href="@{/forgetPassword.html}" th:text="#{message.resetPassword}">reset</a>
         </div>
     </div>

@@ -27,9 +27,6 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private LoginAttemptService loginAttemptService;
-
-    @Autowired
     private HttpServletRequest request;
 
     public MyUserDetailsService() {
@@ -40,10 +37,6 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-        final String ip = getClientIP();
-        if (loginAttemptService.isBlocked(ip)) {
-            throw new RuntimeException("blocked");
-        }
 
         try {
             final User user = userRepository.findByEmail(email);
@@ -84,12 +77,5 @@ public class MyUserDetailsService implements UserDetailsService {
         return authorities;
     }
 
-    private final String getClientIP() {
-        final String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader == null) {
-            return request.getRemoteAddr();
-        }
-        return xfHeader.split(",")[0];
-    }
 
 }
